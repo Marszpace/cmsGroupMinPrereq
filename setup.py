@@ -5,7 +5,7 @@ setup(
     version="1.0",
     packages=find_packages(),
     entry_points={
-        "cms.grading.tasktypes": [
+        "cms.grading.scoretypes": [
             "GroupMinPrereq=scoretypes.GroupMinPrereq:GroupMinPrereq"
         ]
     }
