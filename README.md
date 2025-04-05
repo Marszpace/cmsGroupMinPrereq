@@ -2,8 +2,7 @@
 GroupMin with Prerequisite Grading for CMS.
 
 ## Prerequisites for installing
-1. The path of CMS must be available in the global scope, i.e. you must be able to import cms from anywhere. You may achieve this by installing CMS in the system 
-2. You must have a virtual environment of CMS, which is at, for example ~/cms_venv/ (you may replace this with your own directory)
+You must have a virtual environment of CMS, which is at, for example ~/cms_venv/ (you may replace this with your own directory). This is the virtual environment where CMS is installed and where you run CMS from. 
 
 ## Installation
 ```bash
@@ -12,7 +11,10 @@ git clone https://github.com/Marszpace/cmsGroupMinPrereq.git
 
 # Install the package
 cd cmsGroupMinPrereq
-~/cms_venv/bin/python3 setup.py install # or you may also activate then install. be careful if you use sudo
+~/cms_venv/bin/python3 setup.py install
+# Alternatively, you may also use
+source ~/cms_venv/bin/activate
+python3 setup.py install
 ```
 After this, restart CMS for it to pick-up to the task type
 
