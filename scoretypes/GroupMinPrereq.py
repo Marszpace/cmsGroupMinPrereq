@@ -61,9 +61,9 @@ class GroupMinPrereq(ScoreTypeGroup):
             target = []
             if(self.display == "All"):
                 for pr_idx in sorted(prereq):
-                    target.append(targets[pr_idx-1])
+                    target += targets[pr_idx-1] 
 
-            target.append(targets[st_idx])
+            target += targets[st_idx]
             testcases = []
             public_testcases = []
             previous_tc_all_correct = True
