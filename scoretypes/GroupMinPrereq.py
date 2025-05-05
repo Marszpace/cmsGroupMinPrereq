@@ -31,8 +31,75 @@ class GroupMinPrereq(ScoreTypeGroup):
     """
 
     def __init__(self, parameters, public_testcases):
+        prereq = []
+
+        # Generate the complete prerequisite table
+        for parameter in self.parameters:
+            thisPrereq = set()
+            for pr_idx in parameter[2]:
+                thisPrereq.update(prereq[pr_idx-1])
+            prereq.append(thisPrereq)
+
+        self.prereq = prereq
         self.display = parameters[0]
         super().__init__(parameters[1:], public_testcases)
+
+    def retrieve_target_testcases(self):
+        """Return the list of the target testcases for each subtask.
+
+        Each element of the list consist of multiple strings.
+        Each string represents the testcase name which should be included
+        to the corresponding subtask.
+        The order of the list is the same as 'parameters'.
+
+        return ([[unicode]]): the list of the target testcases for each task.
+
+        """
+
+        t_params = [p[1] for p in self.parameters]
+
+        if all(isinstance(t, int) for t in t_params):
+
+            # XXX Lexicographical order by codename
+            indices = sorted(self.public_testcases.keys())
+            current = 0
+            targets = []
+
+            for t in t_params:
+                next_ = current + t
+                targets.append(indices[current:next_])
+                current = next_
+
+        elif all(isinstance(t, str) for t in t_params):
+
+            indices = sorted(self.public_testcases.keys())
+            targets = []
+
+            for t in t_params:
+                regexp = re.compile(t)
+                target = [tc for tc in indices if regexp.match(tc)]
+                if not target:
+                    raise ValueError(
+                        "No testcase matches against the regexp '%s'" % t)
+                targets.append(target)
+
+        else:
+            raise ValueError(
+                "In the score type parameters, the second value of each element "
+                "must have the same type (int or unicode)")
+
+        if(self.display == "All"):
+            newtargets = []
+            for target in range(self.parameters):
+                thistarget = []
+                for pr_idx in self.prereq[target]:
+                    thistarget += targets[pr_idx-1]
+                thistarget += targets[target]
+                newtargets.append(thistarget)
+
+            return newtargets
+
+        return targets
 
     def compute_score(self, submission_result):
         """See ScoreType.compute_score."""
@@ -45,25 +112,12 @@ class GroupMinPrereq(ScoreTypeGroup):
         public_score = 0
         public_subtasks = []
         ranking_details = []
-        prereq = []
-
-        # Generate the complete prerequisite table
-        for st_idx, parameter in enumerate(self.parameters):
-            thisPrereq = set()
-            for pr_idx in parameter[2]:
-                thisPrereq.update(prereq[pr_idx-1])
-            prereq.append(thisPrereq)
 
         targets = self.retrieve_target_testcases()
         evaluations = {ev.codename: ev for ev in submission_result.evaluations}
 
         for st_idx, parameter in enumerate(self.parameters):
-            target = []
-            if(self.display == "All"):
-                for pr_idx in sorted(prereq[st_idx]):
-                    target += targets[pr_idx-1] 
-
-            target += targets[st_idx]
+            target = targets[st_idx]
             testcases = []
             public_testcases = []
             previous_tc_all_correct = True
