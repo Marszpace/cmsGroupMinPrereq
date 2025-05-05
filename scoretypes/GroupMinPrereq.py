@@ -51,7 +51,7 @@ class GroupMinPrereq(ScoreTypeGroup):
         for st_idx, parameter in enumerate(self.parameters):
             thisPrereq = set()
             for pr_idx in parameter[2]:
-                thisPrereq.update(prereq[pr_idx])
+                thisPrereq.update(prereq[pr_idx-1])
             prereq.append(thisPrereq)
 
         targets = self.retrieve_target_testcases()
