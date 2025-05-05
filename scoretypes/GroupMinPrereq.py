@@ -24,9 +24,10 @@ class GroupMinPrereq(ScoreTypeGroup):
     In particaluar, it should function as if we put every testcase 
     from prerequisites into a subtask/group/range.
 
-    Parameters are ["Display", [m, t, [p1, p2, ..., pi]], ... ]. prerequisite 
-    are *one-based* indexed. "Display" parameter must be either "None" or "All",
-    which tells CMS how to display the task outcome.
+    Parameters are [Display, [m, t, [p1, p2, ..., pi]], ... ]. prerequisite 
+    are *one-based* indexed. "Display" parameter must be either True or False,
+    which tells CMS whether to display the task outcome with prerequisite 
+    testcases in the evaluation or not.
     """
 
     def __init__(self, parameters, public_testcases):
@@ -86,7 +87,7 @@ class GroupMinPrereq(ScoreTypeGroup):
                 "In the score type parameters, the second value of each element "
                 "must have the same type (int or unicode)")
 
-        if(self.display == "All"):
+        if(self.display):
             newtargets = []
             for target in range(len(self.parameters)):
                 thistarget = []
