@@ -11,6 +11,8 @@
 # This work falls under GNU Affero General Public License, same as CMS.
 
 from cms.grading.scoretypes import ScoreTypeGroup # This assumes CMS is 'installed' into the system
+import logging
+logger = logging.getLogger(__name__)
 
 # Dummy function to mark translatable string.
 def N_(message):
@@ -87,13 +89,14 @@ class GroupMinPrereq(ScoreTypeGroup):
                 "In the score type parameters, the second value of each element "
                 "must have the same type (int or unicode)")
 
-        if(self.display):
+        logging.info(self.display)
+        if(self.display == True):
             newtargets = []
-            for target in range(len(self.parameters)):
+            for tc_idx in range(len(self.parameters)):
                 thistarget = []
-                for pr_idx in self.prereq[target]:
+                for pr_idx in self.prereq[tc_idx]:
                     thistarget += targets[pr_idx-1]
-                thistarget += targets[target]
+                thistarget += targets[tc_idx]
                 newtargets.append(thistarget)
             return newtargets
 
