@@ -16,7 +16,6 @@ from cms.grading.scoretypes import ScoreTypeGroup # This assumes CMS is 'install
 def N_(message):
     return message
 
-
 class GroupMinPrereq(ScoreTypeGroup):
     """The score of a submission is the sum of the product of the
     minimum of the score of each testcases within a range, as well
@@ -31,20 +30,17 @@ class GroupMinPrereq(ScoreTypeGroup):
     """
 
     def __init__(self, parameters, public_testcases):
-
         prereq = []
         # Generate the complete prerequisite table
         for parameter in parameters[1:]:
             thisPrereq = set()
             for pr_idx in parameter[2]:
                 thisPrereq.update(prereq[pr_idx-1])
-            prereq.append(thisPrereq)
+            prereq.append(sorted(thisPrereq))
 
         self.prereq = prereq
         self.display = parameters[0]
         super().__init__(parameters[1:], public_testcases)
-
-        
 
     def retrieve_target_testcases(self):
         """Return the list of the target testcases for each subtask.
@@ -98,7 +94,6 @@ class GroupMinPrereq(ScoreTypeGroup):
                     thistarget += targets[pr_idx-1]
                 thistarget += targets[target]
                 newtargets.append(thistarget)
-
             return newtargets
 
         return targets
