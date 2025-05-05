@@ -31,18 +31,20 @@ class GroupMinPrereq(ScoreTypeGroup):
     """
 
     def __init__(self, parameters, public_testcases):
-        self.display = parameters[0]
-        super().__init__(parameters[1:], public_testcases)
 
         prereq = []
         # Generate the complete prerequisite table
-        for parameter in parameters:
+        for parameter in parameters[1:]:
             thisPrereq = set()
             for pr_idx in parameter[2]:
                 thisPrereq.update(prereq[pr_idx-1])
             prereq.append(thisPrereq)
 
         self.prereq = prereq
+        self.display = parameters[0]
+        super().__init__(parameters[1:], public_testcases)
+
+        
 
     def retrieve_target_testcases(self):
         """Return the list of the target testcases for each subtask.
