@@ -7,7 +7,6 @@ setup(
     entry_points={
         "cms.grading.scoretypes": [
             "GroupMinPrereq=scoretypes.GroupMinPrereq:GroupMinPrereq"
-            "GroupMinPrereqDisplayAll=scoretypes.GroupMinPrereqDisplayAll:GroupMinPrereqDisplayAll"
         ]
     }
 )

@@ -10,6 +10,8 @@
 #
 # This work falls under GNU Affero General Public License, same as CMS.
 
+# This file is deprecated, see "GroupMinPrereq"'s first parameter.
+
 from cms.grading.scoretypes import ScoreTypeGroup # This assumes CMS is 'installed' into the system
 
 # Dummy function to mark translatable string.
@@ -55,8 +57,6 @@ class GroupMinPrereqDisplay(ScoreTypeGroup):
                 targets.append(indices[current:next_])
                 current = next_
 
-            return targets
-
         elif all(isinstance(t, str) for t in t_params):
 
             indices = sorted(self.public_testcases.keys())
@@ -69,7 +69,6 @@ class GroupMinPrereqDisplay(ScoreTypeGroup):
                     raise ValueError(
                         "No testcase matches against the regexp '%s'" % t)
                 targets.append(target)
-
 
         else:
             raise ValueError(

@@ -25,8 +25,9 @@ class GroupMinPrereq(ScoreTypeGroup):
     In particaluar, it should function as if we put every testcase 
     from prerequisites into a subtask/group/range.
 
-    Parameters are [[m, t, [p1, p2, ..., pi]], ... ]. prerequisite 
-    are *one-based* indexed.
+    Parameters are ["Display", [m, t, [p1, p2, ..., pi]], ... ]. prerequisite 
+    are *one-based* indexed. "Display" parameter must be either "None" or "All",
+    which tells CMS how to display the task outcome.
     """
 
     def compute_score(self, submission_result):
@@ -40,13 +41,25 @@ class GroupMinPrereq(ScoreTypeGroup):
         public_score = 0
         public_subtasks = []
         ranking_details = []
+        prereq = []
+
+        # Generate the complete prerequisite table
+        for st_idx, parameter in enumerate(self.parameters):
+            thisPrereq = set()
+            for pr_idx in parameter[2]:
+                thisPrereq.update(prereq[pr_idx])
+            prereq.append(thisPrereq)
 
         targets = self.retrieve_target_testcases()
         evaluations = {ev.codename: ev for ev in submission_result.evaluations}
 
         for st_idx, parameter in enumerate(self.parameters):
-            target = targets[st_idx]
+            target = []
+            if(self.parameters == "All"):
+                for pr_idx in sorted(prereq):
+                    target.append(targets[pr_idx-1])
 
+            target.append(targets[st_idx])
             testcases = []
             public_testcases = []
             previous_tc_all_correct = True
@@ -86,7 +99,6 @@ class GroupMinPrereq(ScoreTypeGroup):
             for pr_idx in parameter[2]:
                 pr_score_fraction = subtasks[pr_idx - 1].get("score_fraction")
                 st_score_fraction = min(st_score_fraction, pr_score_fraction)
-
             ### END Prerequisite Grading Part
 
             st_score = st_score_fraction * parameter[0]
