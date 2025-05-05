@@ -30,6 +30,13 @@ class GroupMinPrereq(ScoreTypeGroup):
     which tells CMS how to display the task outcome.
     """
 
+    def retrieve_target_testcases(self):
+        display = self.parameters[0]
+        self.parameters = self.parameters[1:]
+        targets = super().retrieve_target_testcases()
+        self.parameters = [display] + self.parameters
+        return targets
+
     def compute_score(self, submission_result):
         """See ScoreType.compute_score."""
         # Actually, this means it didn't even compile!
