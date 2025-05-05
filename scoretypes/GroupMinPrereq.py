@@ -51,7 +51,7 @@ class GroupMinPrereq(ScoreTypeGroup):
         for st_idx, parameter in enumerate(self.parameters):
             thisPrereq = set()
             for pr_idx in parameter[2]:
-                thisPrereq.update(prereq[pr_idx-1])
+                thisPrereq.update(prereq[pr_idx])
             prereq.append(thisPrereq)
 
         targets = self.retrieve_target_testcases()
@@ -60,7 +60,7 @@ class GroupMinPrereq(ScoreTypeGroup):
         for st_idx, parameter in enumerate(self.parameters):
             target = []
             if(self.display == "All"):
-                for pr_idx in sorted(prereq):
+                for pr_idx in sorted(prereq[st_idx]):
                     target += targets[pr_idx-1] 
 
             target += targets[st_idx]
