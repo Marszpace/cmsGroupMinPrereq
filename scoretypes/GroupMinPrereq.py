@@ -88,7 +88,7 @@ class GroupMinPrereq(ScoreTypeGroup):
 
         if(self.display == "All"):
             newtargets = []
-            for target in range(self.parameters):
+            for target in range(len(self.parameters)):
                 thistarget = []
                 for pr_idx in self.prereq[target]:
                     thistarget += targets[pr_idx-1]
