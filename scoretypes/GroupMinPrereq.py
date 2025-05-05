@@ -11,8 +11,6 @@
 # This work falls under GNU Affero General Public License, same as CMS.
 
 from cms.grading.scoretypes import ScoreTypeGroup # This assumes CMS is 'installed' into the system
-import logging
-logger = logging.getLogger(__name__)
 
 # Dummy function to mark translatable string.
 def N_(message):
@@ -39,6 +37,7 @@ class GroupMinPrereq(ScoreTypeGroup):
             thisPrereq = set()
             for pr_idx in parameter[2]:
                 thisPrereq.update(prereq[pr_idx-1])
+                thisPrereq.add(pr_idx-1)
             prereq.append(sorted(thisPrereq))
 
         self.prereq = prereq
@@ -89,13 +88,12 @@ class GroupMinPrereq(ScoreTypeGroup):
                 "In the score type parameters, the second value of each element "
                 "must have the same type (int or unicode)")
 
-        logging.info(self.display)
         if(self.display == True):
             newtargets = []
             for tc_idx in range(len(self.parameters)):
                 thistarget = []
                 for pr_idx in self.prereq[tc_idx]:
-                    thistarget += targets[pr_idx-1]
+                    thistarget += targets[pr_idx]
                 thistarget += targets[tc_idx]
                 newtargets.append(thistarget)
             return newtargets
@@ -155,8 +153,8 @@ class GroupMinPrereq(ScoreTypeGroup):
             prerequisite are strictly before it, i.e. that 1...n is a valid 
             grading sequence.
             """
-            for pr_idx in parameter[2]:
-                pr_score_fraction = subtasks[pr_idx - 1].get("score_fraction")
+            for pr_idx in self.prereq[st_idx]:
+                pr_score_fraction = subtasks[pr_idx].get("score_fraction")
                 st_score_fraction = min(st_score_fraction, pr_score_fraction)
             ### END Prerequisite Grading Part
 
