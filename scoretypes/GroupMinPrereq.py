@@ -25,7 +25,7 @@ class GroupMinPrereq(ScoreTypeGroup):
     from prerequisites into a subtask/group/range.
 
     Parameters are [Display, [m, t, [p1, p2, ..., pi]], ... ]. prerequisite 
-    are *one-based* indexed. "Display" parameter must be either True or False,
+    are *one-based* indexed. "Display" parameter must be either true or false,
     which tells CMS whether to display the task outcome with prerequisite 
     testcases in the evaluation or not.
     """
